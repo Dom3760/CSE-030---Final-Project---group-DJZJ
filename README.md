@@ -1,5 +1,4 @@
 1. Simple Navigation
-Bootstrap Exercise
 1 Description
 In this project your task is to implement a program that allows users to plan for air travel between different airports. You can use the airports and routes defined in the support files that come with this project, or you can modify them to add more interesting routes.
 
