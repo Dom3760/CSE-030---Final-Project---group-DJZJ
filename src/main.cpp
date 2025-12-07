@@ -1,5 +1,6 @@
 #include <iostream>
 #include <Graph.h>
+#include <ostream>
 
 using namespace std;
 
@@ -16,6 +17,8 @@ int main(){
     Vertex* tokyo = new Vertex("Tokyo");
     Vertex* beijing = new Vertex("Beijing");
     // Vertex* london = new Vertex("London");
+
+    std::cout<<"test"<<std::endl;
 
     Graph g;
     g.addVertex(sfo);
