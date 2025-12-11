@@ -36,7 +36,7 @@ MAKEFLAGS += --no-print-directory
 # ==================================== BANNED HEADERS ===================================== #
 
 NOT_ALLOWED = stl_vector|stl_list|stl_deque|std_stack|stl_queue|stl_set|stl_map|unordered_map|unordered_set|stl_algo.h
-EXCLUDE = src/main.cpp src/Application.cpp
+EXCLUDE = src/main.cpp src/appUi.cpp
 
 # ======================================== TARGETS ======================================== #
 
