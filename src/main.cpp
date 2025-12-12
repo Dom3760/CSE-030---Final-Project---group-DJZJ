@@ -131,7 +131,6 @@ int main() {
     }
 
 
-
     Optimization preference;
 
     if (request.preferenceChoice == 1)
