@@ -1,4 +1,5 @@
 #include "ArrayList.h"
+#include "Graph.h"
 #include <AppUi.h>
 #include <FL/Enumerations.H>
 #include <FL/Fl_Scroll.H>
@@ -8,6 +9,7 @@
 #include <bobcat_ui/textbox.h>
 #include <bobcat_ui/window.h>
 #include <string>
+#include <cstddef>
 #include <fstream>
 #include <ios>
 #include <iostream>
@@ -23,11 +25,14 @@ AppUi::AppUi() {
     start = new Dropdown(20, 40, 360, 25, "Starting Point");
     destination = new Dropdown(20, 100, 360, 25, "Destination");
 
-    for (int i = 0; i < vertexes.size(); i++) {
+    /*for (int i = 0; i < vertexes.size(); i++) {
         start->add(vertexes[i]->data);
         destination->add(vertexes[i]->data);
-    }
+    }*/ 
+    //removed this and made an update dropdown because it didn't update when put in here
 
+    ON_CHANGE(start, AppUi::onSelect)
+    ON_CHANGE(destination, AppUi::onSelect)
     search = new Button(20, 150, 170, 25, "Search");
     clear = new Button(200, 150, 170, 25, "Clear");
     ON_CLICK(search, AppUi::onClick);
@@ -44,10 +49,93 @@ AppUi::AppUi() {
 
 void AppUi::onClick(bobcat::Widget *sender) {
 
+    if (sender == search){
+        //for ucs
+        Waypoint* ucs = g.ucs(startNode, destNode);
+        
+        if (ucs){
+        cout << "We found a path" << endl;
+        Waypoint* temp = ucs;
+        while (temp != nullptr){
+            cout << temp->vertex->data << " " << temp->partialCost << endl;
+            temp = temp->parent;
+        }
+        }
+        else{
+        cout << "There is no path" << endl;
+        } 
+        // for dfs
+        Waypoint* dfs = g.dfs(startNode, destNode);
+        
+        if (dfs){
+        cout << "We found a path" << endl;
+        Waypoint* temp = dfs;
+        while (temp != nullptr){
+            cout << temp->vertex->data << " " << temp->partialCost << endl;
+            temp = temp->parent;
+        }
+        }
+        else{
+        cout << "There is no path" << endl;
+        } 
+        // for bfs
+        Waypoint* bfs = g.bfs(startNode, destNode);
+        
+        if (bfs){
+        cout << "We found a path" << endl;
+        Waypoint* temp = bfs;
+        while (temp != nullptr){
+            cout << temp->vertex->data << " " << temp->partialCost << endl;
+            temp = temp->parent;
+        }
+        }
+        else{
+        cout << "There is no path" << endl;
+        } 
+    }
 }
 
 void AppUi::onClear(bobcat::Widget *sender) {
+    if (sender == clear){
+        start->value(0);
+        destination->value(0);
+        startNode = vertexes[0];
+        destNode = vertexes[0];
+        cout << "cleared" << endl;
+    }
+}
 
+void AppUi::updateDropdowns(){
+    for (int i = 0; i < vertexes.size(); i++) {
+        start->add(vertexes[i]->data);
+        destination->add(vertexes[i]->data);
+    }
+}
+
+void AppUi::onSelect(bobcat::Widget* sender){
+    int startindex = start->value();
+    int destindex = destination->value();
+    /*if (startindex == 0) {
+         {
+            startNode = nullptr;
+            cout << "Start cleared" << endl;
+        return; 
+        }
+    }    
+    if (destindex == 0) {
+        if (sender == destination) {
+            destNode = nullptr;
+            cout << "Destination cleared" << endl;
+        return; 
+        }
+    }*/
+    if (sender == start){
+        startNode = vertexes[startindex];
+        cout << "new start is " << startNode->data << endl;
+    } else if (sender == destination){
+        destNode = vertexes[destindex];
+        cout << "new destination is " << destNode->data << endl;
+    }
 }
 
 void AppUi::init() {
@@ -61,6 +149,7 @@ void AppUi::init() {
         while (getline(filePointer_ver, theText)) {
             vertexes.append(new Vertex(theText));
         }
+        updateDropdowns();
     }
     filePointer_ver.close();
     filePointer_edg.open("assets/edges.csv", ios::in);
@@ -79,7 +168,7 @@ void AppUi::init() {
     filePointer_edg.close();
 
     // Adding edges and vertexes
-    Graph g;
+    Graph g;  
     for (int i = 0; i < vertexes.size(); i++) {
         g.addVertex(vertexes[i]);
     }
@@ -87,12 +176,15 @@ void AppUi::init() {
         edgeInfo *edge = edges[i];
         g.addEdge(vertexes[edge->vertex1],vertexes[edge->vertex2],edge->distance);
     }
+    //made the first vertex default so the dropdown is easier
+    startNode = vertexes[0];
+    destNode = vertexes[0];
 
     // Vertex* london = new Vertex("London");
     // g.addEdge(nyc, london, 6);
     // g.addEdge(london, moscow, 6););
 
-    Waypoint* path = g.ucs(vertexes[0], vertexes[1]);
+    /*Waypoint* path = g.ucs(vertexes[0], vertexes[1]);
 
     if (path){
         cout << "We found a path" << endl;
@@ -105,7 +197,7 @@ void AppUi::init() {
     else{
         cout << "There is no path" << endl;
         //test23
-    }
+    }*/
 }
 
 

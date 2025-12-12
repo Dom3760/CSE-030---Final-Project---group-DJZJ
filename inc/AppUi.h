@@ -35,9 +35,14 @@ class AppUi : public bobcat::Application_ {
     ArrayList<edgeInfo*> edges;
     Graph g;
 
+    Vertex* startNode = nullptr;
+    Vertex* destNode = nullptr;
+
     void init();
     void onClick(bobcat::Widget *sender);
     void onClear(bobcat::Widget *sender);
+    void onSelect(bobcat::Widget *sender);
+    void updateDropdowns();
 public:
     AppUi();
 };
