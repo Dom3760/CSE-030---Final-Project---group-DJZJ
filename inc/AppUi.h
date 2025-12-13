@@ -2,6 +2,7 @@
 #define AppUi_H
 
 #include "ArrayList.h"
+#include "Enums.h"
 #include <bobcat_ui/bobcat_ui.h>
 #include <bobcat_ui/button.h>
 #include <bobcat_ui/dropdown.h>
@@ -27,7 +28,7 @@ class AppUi : public bobcat::Application_ {
     bobcat::Window *window;
     bobcat::Dropdown *start;
     bobcat::Dropdown *destination;
-    bobcat::Dropdown* preference;
+    bobcat::Dropdown *preference;
     bobcat::Button *search;
     bobcat::Button *clear;
     Fl_Scroll *results;
@@ -36,6 +37,7 @@ class AppUi : public bobcat::Application_ {
     ArrayList<edgeInfo*> edges;
     Graph g;
 
+    Optimization prefNode;
     Vertex* startNode = nullptr;
     Vertex* destNode = nullptr;
 

@@ -33,6 +33,7 @@ AppUi::AppUi() {
 
     ON_CHANGE(start, AppUi::onSelect)
     ON_CHANGE(destination, AppUi::onSelect)
+    ON_CHANGE(preference, AppUi::onSelect)
     search = new Button(20, 150, 170, 25, "Search");
     clear = new Button(200, 150, 170, 25, "Clear");
     ON_CLICK(search, AppUi::onClick);
@@ -51,37 +52,11 @@ void AppUi::onClick(bobcat::Widget *sender) {
 
     if (sender == search) {
         // for ucs
-        Waypoint *ucs = g.findOptimalPath(startNode, destNode, CHEAPEST);
+        Waypoint *ucs = g.findOptimalPath(startNode, destNode, prefNode );
 
         if (ucs) {
             cout << "We found a path" << endl;
             Waypoint *temp = ucs;
-            while (temp != nullptr) {
-                cout << temp->vertex->data << " " << temp->partialCost << endl;
-                temp = temp->parent;
-            }
-        } else {
-            cout << "There is no path" << endl;
-        }
-        // for dfs
-        Waypoint *dfs = g.dfs(startNode, destNode);
-
-        if (dfs) {
-            cout << "We found a path" << endl;
-            Waypoint *temp = dfs;
-            while (temp != nullptr) {
-                cout << temp->vertex->data << " " << temp->partialCost << endl;
-                temp = temp->parent;
-            }
-        } else {
-            cout << "There is no path" << endl;
-        }
-        // for bfs
-        Waypoint *bfs = g.bfs(startNode, destNode);
-
-        if (bfs) {
-            cout << "We found a path" << endl;
-            Waypoint *temp = bfs;
             while (temp != nullptr) {
                 cout << temp->vertex->data << " " << temp->partialCost << endl;
                 temp = temp->parent;
@@ -112,6 +87,7 @@ void AppUi::updateDropdowns() {
 void AppUi::onSelect(bobcat::Widget *sender) {
     int startindex = start->value();
     int destindex = destination->value();
+    int prefindex = preference->value();
 
     if (sender == start) {
         startNode = vertexes[startindex];
@@ -119,6 +95,16 @@ void AppUi::onSelect(bobcat::Widget *sender) {
     } else if (sender == destination) {
         destNode = vertexes[destindex];
         cout << "new destination is " << destNode->data << endl;
+    } else if (sender == preference){
+        if (prefindex == 0){
+            prefNode = CHEAPEST;
+        }
+        else if (prefindex == 1){
+            prefNode = SHORTEST_TIME;
+        }
+        else {
+            prefNode = LEAST_STOPS;
+        }
     }
 }
 
@@ -169,4 +155,5 @@ void AppUi::init() {
 
     startNode = vertexes[0];
     destNode = vertexes[0];
+    prefNode = CHEAPEST;
 }
