@@ -27,6 +27,7 @@ class AppUi : public bobcat::Application_ {
     bobcat::Window *window;
     bobcat::Dropdown *start;
     bobcat::Dropdown *destination;
+    bobcat::Dropdown* preference;
     bobcat::Button *search;
     bobcat::Button *clear;
     Fl_Scroll *results;
@@ -45,6 +46,8 @@ class AppUi : public bobcat::Application_ {
     void updateDropdowns();
 public:
     AppUi();
+    // int run() const;
+    // ~AppUi();
 };
 
 #endif
