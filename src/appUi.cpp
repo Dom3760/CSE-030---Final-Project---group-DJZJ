@@ -22,7 +22,7 @@ using namespace std;
 
 
 AppUi::AppUi() {
-    window = new Window(100, 100, 400, 400, "Flight Planner");
+    window = new Window(100, 100, 400, 600, "Flight Planner");
 
     start = new Dropdown( 20, 20, 360, 25, "Starting Point");
     destination = new Dropdown(20, 70, 360, 25, "Destination");
@@ -57,7 +57,9 @@ void AppUi::onClick(bobcat::Widget *sender) {
     Waypoint *ucs = g.findOptimalPath(startNode, destNode, prefNode );
     results->clear();
     if (!ucs) {
+        results->add(new TextBox(20,20, 300, 25, "There is no path."));
         cout << "There is no path" << endl;
+        window->redraw();
         return;
     }
     cout << "We found a path" << endl;
@@ -67,9 +69,16 @@ void AppUi::onClick(bobcat::Widget *sender) {
         if (temp->parent != nullptr) {
             results->add(new TextBox(20, y, 300, 25, temp->vertex->data));
             y += 25;
-            string test = "    Flight time: " + to_string(temp->partialCost) + " hours";
-            cout << test << endl;
-            results->add(new TextBox(20, y, 300, 25,test));
+            string label;
+            if(prefNode == CHEAPEST){
+                label = " Cost: $" + to_string(temp->partialCost);
+            } else if (prefNode == SHORTEST_TIME){
+                label = " Fight Time: " + to_string(temp->partialCost) + " hours";
+            } else {
+                label = " Stops: " + to_string(temp->partialCost);
+            }
+            cout << label << endl;
+            results->add(new TextBox(20, y, 300, 25,label));
             y += 25;
         }
         cout << temp->vertex->data << " " << temp->partialCost << endl;
