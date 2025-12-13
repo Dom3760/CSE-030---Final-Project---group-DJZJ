@@ -49,21 +49,32 @@ AppUi::AppUi() {
 }
 
 void AppUi::onClick(bobcat::Widget *sender) {
-
-    if (sender == search) {
-        // for ucs
-        Waypoint *ucs = g.findOptimalPath(startNode, destNode, prefNode );
-
-        if (ucs) {
-            cout << "We found a path" << endl;
-            Waypoint *temp = ucs;
-            while (temp != nullptr) {
-                cout << temp->vertex->data << " " << temp->partialCost << endl;
-                temp = temp->parent;
-            }
-        } else {
-            cout << "There is no path" << endl;
+    if (sender != search) {
+        cout << "There is no path" << endl;
+        return;
+    }
+    // for ucs
+    Waypoint *ucs = g.findOptimalPath(startNode, destNode, prefNode );
+    results->clear();
+    if (!ucs) {
+        cout << "There is no path" << endl;
+        return;
+    }
+    cout << "We found a path" << endl;
+    Waypoint *temp = ucs;
+    int y = results->y() + 10;
+    while (temp != nullptr) {
+        if (temp->parent != nullptr) {
+            results->add(new TextBox(20, y, 300, 25, temp->vertex->data));
+            y += 25;
+            string test = "    Flight time: " + to_string(temp->partialCost) + " hours";
+            cout << test << endl;
+            results->add(new TextBox(20, y, 300, 25,test));
+            y += 25;
         }
+        cout << temp->vertex->data << " " << temp->partialCost << endl;
+        temp = temp->parent;
+        window->redraw();
     }
 }
 
@@ -73,6 +84,8 @@ void AppUi::onClear(bobcat::Widget *sender) {
         destination->value(0);
         startNode = vertexes[0];
         destNode = vertexes[0];
+        results->clear();
+        window->redraw();
         cout << "cleared" << endl;
     }
 }
