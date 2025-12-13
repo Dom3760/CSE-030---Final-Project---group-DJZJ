@@ -20,6 +20,15 @@
 using namespace bobcat;
 using namespace std;
 
+struct finalResultData {
+    string name;
+    string txt;
+
+    finalResultData(string gotName, string gotTxt) {
+        name = gotName;
+        txt = gotTxt;
+    };
+};
 
 AppUi::AppUi() {
     window = new Window(100, 100, 400, 600, "Flight Planner");
@@ -64,11 +73,11 @@ void AppUi::onClick(bobcat::Widget *sender) {
     }
     cout << "We found a path" << endl;
     Waypoint *temp = ucs;
+    ArrayList<finalResultData*> resultList;
     int y = results->y() + 10;
+
     while (temp != nullptr) {
         if (temp->parent != nullptr) {
-            results->add(new TextBox(20, y, 300, 25, temp->vertex->data));
-            y += 25;
             string label;
             if(prefNode == CHEAPEST){
                 label = " Cost: $" + to_string(temp->partialCost);
@@ -77,13 +86,19 @@ void AppUi::onClick(bobcat::Widget *sender) {
             } else {
                 label = " Stops: " + to_string(temp->partialCost);
             }
+            resultList.append(new finalResultData(temp->vertex->data,label));
             cout << label << endl;
-            results->add(new TextBox(20, y, 300, 25,label));
-            y += 25;
         }
         cout << temp->vertex->data << " " << temp->partialCost << endl;
         temp = temp->parent;
         window->redraw();
+    }
+    for (int i = resultList.size()-1;i >= 0;i--) {
+        finalResultData *gotData = resultList[i];
+        results->add(new TextBox(20, y, 300, 25, gotData->name));
+        y += 25;
+        results->add(new TextBox(20, y, 300, 25,gotData->txt));
+        y += 25;
     }
 }
 
